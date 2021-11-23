@@ -1,16 +1,15 @@
 const {Sequelize} = require('sequelize');
 require('dotenv').config();
 
-module.exports = new Sequelize({
+module.exports = new Sequelize(process.env.SQL_DB_NAME, process.env.SQL_DB_UID, process.env.SQL_DB_PASS, {
+  host: process.env.SQL_DB_HOST,
   dialect: 'mssql',
-  dialectModulePath: 'msnodesqlv8/lib/sequelize',
-  dialectOptions: {
-    connectionString: process.env.SQL_SERVER_CONN_STRING,    
-    encrypt: true
-  },
   pool: {
     max: 5,
     min: 0,
     idle: 10000
+  },
+  dialectOptions: {
+    encrypt: true
   }
 });
