@@ -5,6 +5,12 @@ module.exports = new Sequelize({
   dialect: 'mssql',
   dialectModulePath: 'msnodesqlv8/lib/sequelize',
   dialectOptions: {
-    connectionString: process.env.SQL_SERVER_CONN_STRING
+    connectionString: process.env.SQL_SERVER_CONN_STRING,    
+    encrypt: true
   },
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000
+  }
 });
