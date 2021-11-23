@@ -1,17 +1,10 @@
 const {Sequelize} = require('sequelize');
+require('dotenv').config();
 
-module.exports = new Sequelize(
-    'telega',
-    'root',
-    'root',
-    {
-        host: '5.188.129.229',
-        port: '6432',
-        dialect: 'postgres'
-    }
-    //  psql --host=5.188.129.229 \
-    //  --port=6432 \
-//      --user=<database user name> \
-//      --dbname=<database name> \
-//      --set=sslmode=verify-ca
-)
+module.exports = new Sequelize({
+  dialect: 'mssql',
+  dialectModulePath: 'sequelize-msnodesqlv8',
+  dialectOptions: {
+    connectionString: process.env.SQL_SERVER_CONN_STRING
+  },
+});
