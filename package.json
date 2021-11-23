@@ -10,22 +10,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^10.0.0",
+    "msnodesqlv8": "^2.4.3",
     "node-telegram-bot-api": "^0.52.0",
     "nodemon": "^2.0.13",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.6.5",
-	"dotenv": "^10.0.0",
-	"sequelize-msnodesqlv8": "^0.2.6"
+    "sequelize": "^6.6.5"
   },
-  "devDependencies": {},
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/utimur/telegram-bot-course.git"
+    "type": "git"
   },
-  "bugs": {
-    "url": "https://github.com/utimur/telegram-bot-course/issues"
-  },
-  "homepage": "https://github.com/utimur/telegram-bot-course#readme",
   "description": ""
 }
