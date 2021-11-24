@@ -1,8 +1,11 @@
 const {Sequelize} = require('sequelize');
 require('dotenv').config();
 
-module.exports = new Sequelize(process.env.SQL_DB_NAME, process.env.SQL_DB_UID, process.env.SQL_DB_PASS, {
-  host: process.env.SQL_DB_HOST,
+module.exports = new Sequelize(
+  process.env.SQL_DB_NAME.toString(), 
+  process.env.SQL_DB_UID.toString(), 
+  process.env.SQL_DB_PASS.toString(), {
+  host: process.env.SQL_DB_HOST.toString(),
   dialect: 'mssql',
   pool: {
     max: 5,
