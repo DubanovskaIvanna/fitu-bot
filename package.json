@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "msnodesqlv8": "^2.4.3",
     "node-telegram-bot-api": "^0.52.0",
     "nodemon": "^2.0.13",
     "pg": "^8.7.1",
