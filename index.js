@@ -9,8 +9,12 @@ const token = '1977813599:AAHLugqimaeqnNagVf7Jo-5D3wYi6TYR0i0'
 
 const bot = new TelegramApi(token, {polling: true})
 
+const findUser = async (chatId) => {
+    return UserModel.findOne({where: {ChatId: chatId}});
+}
+
 const updateUserData = async (chatId, Identity) => {
-    const user = await UserModel.findOne({chatId})
+    const user = await findUser(chatId)
     const question = await QuestionModel.findOne({where: {Identity}});
 
     if (question.TypeOfSet != null) user.TypeOfSet = question.TypeOfSet;
@@ -97,7 +101,7 @@ const buildQuestionMessage = (question, user) => {
 }
 
 const showLastQuestion = async (chatId) => {
-    const user = await UserModel.findOne({chatId});
+    const user = await findUser(chatId);
     const Identity  = user.LastQuestionId;
     const question = await QuestionModel.findOne({where: {Identity}})
     const message = buildQuestionMessage(question.Question, user);
@@ -129,7 +133,7 @@ const start = async () => {
 
         try {
             if (text === '/start') {                
-                const user = await UserModel.findOne({chatId})
+                const user = await findUser(chatId);
                 if (user === null) {
                     await UserModel.create({ChatId: chatId});                
                 }
@@ -138,14 +142,14 @@ const start = async () => {
                 return showQuestion(chatId, null);
             }
             if (text === '/continue') {
-                const user = await UserModel.findOne({chatId})
+                const user = await findUser(chatId);
                 if (user === null)
                     return bot.sendMessage(chatId, 'Вибачте. Ви поки-що ще не проходили оитування і мені нічого показати.');
                 const ID = user.LastQuestionId;
                 return showQuestion(chatId, ID);
             }
             if (text === '/info') {
-                const user = await UserModel.findOne({chatId})
+                const user = await findUser(chatId);
                 if (user === null)
                     return bot.sendMessage(chatId, 'Вибачте. Ви поки-що ще не проходили оитування і мені нічого показати.');
                 const ID = user.LastQuestionId;
