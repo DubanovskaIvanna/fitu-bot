@@ -131,7 +131,7 @@ const start = async () => {
             if (text === '/start') {                
                 const user = await UserModel.findOne({chatId})
                 if (user === null) {
-                    await UserModel.create({chatId});                
+                    await UserModel.create({ChatId: chatId});                
                 }
                 await bot.sendSticker(chatId, 'https://tlgrm.ru/_/stickers/ea5/382/ea53826d-c192-376a-b766-e5abc535f1c9/7.webp');
                 await bot.sendMessage(chatId, `Вітаємо! Ви у телеграм боті Іванни Дубаньовської, здорова спина й правильна осанка`);
@@ -139,11 +139,15 @@ const start = async () => {
             }
             if (text === '/continue') {
                 const user = await UserModel.findOne({chatId})
+                if (user === null)
+                    return bot.sendMessage(chatId, 'Вибачте. Ви поки-що ще не проходили оитування і мені нічого показати.');
                 const ID = user.LastQuestionId;
                 return showQuestion(chatId, ID);
             }
             if (text === '/info') {
                 const user = await UserModel.findOne({chatId})
+                if (user === null)
+                    return bot.sendMessage(chatId, 'Вибачте. Ви поки-що ще не проходили оитування і мені нічого показати.');
                 const ID = user.LastQuestionId;
                 return showLastQuestion(chatId);
             }
