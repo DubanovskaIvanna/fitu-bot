@@ -2,7 +2,7 @@ const TelegramApi = require('node-telegram-bot-api')
 const sequelize = require('./db');
 const UserModel = require('./models/UserModels');
 const QuestionModel = require('./models/QuestionModels');
-const options = require('./options');
+const ExerciseModel = require('./models/ExerciseModels');
 require('dotenv').config();
 
 const token = '1977813599:AAHLugqimaeqnNagVf7Jo-5D3wYi6TYR0i0'
@@ -13,6 +13,17 @@ const findUser = async (chatId) => {
     return UserModel.findOne({where: {ChatId: chatId}});
 }
 
+const SendExercise = async(chatId, ID) => {
+    const exercise = await ExerciseModel.findOne({where: {ID}});
+    if (exercise.Exercise != null) {
+        await bot.sendMessage(chatId, exercise.Exercise);
+    }
+    if (exercise.ImageURL != null) {
+        const url = MakeSASURL(exercise.ImageURL);
+        await bot.sendAnimation(chatId, url, {caption: "Cхема"});
+    }
+
+}
 const updateUserData = async (chatId, Identity) => {
     const user = await findUser(chatId)
     const question = await QuestionModel.findOne({where: {Identity}});
@@ -106,8 +117,11 @@ const showLastQuestion = async (chatId) => {
     const question = await QuestionModel.findOne({where: {Identity}})
     const message = buildQuestionMessage(question.Question, user);
     await bot.sendMessage(chatId, message);
-    if (user.ImageURL != null) {
-        await bot.sendPhoto(chatId, "Схема", user.ImageURL);
+    if (user.TypeOfSet != null) {
+        await SendExercise(chatId, user.TypeOfSet);
+    }
+    if (user.AdditionSet != null) {
+        await SendExercise(chatId, user.AdditionSet );
     }
 }
 
