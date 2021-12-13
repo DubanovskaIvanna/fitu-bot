@@ -44,7 +44,26 @@ const updateUserData = async (chatId, Identity) => {
     
     await user.save();
     return question.ID;
+}
+
+const dropUserData = async (chatId) => {
+    const user = await findUser(chatId)
+
+    user.TypeOfSet = null;
+    user.AdditionSet = null;
+    user.WorkType = null;
+    user.AgeRange = null;
+    user.Intensity = null;
+    user.Iterations = null;
+    user.Sex = null;
+    user.Times = null;
+    user.ImageURL = null;
+    user.SpineDepartment = null;
+    user.LastQuestionId =  null;
+    
+    return user.save();
 } 
+
 const buildOptions = (questions) => {
     return { 
         reply_markup: JSON.stringify({
@@ -150,6 +169,8 @@ const start = async () => {
                 const user = await findUser(chatId);
                 if (user === null) {
                     await UserModel.create({ChatId: chatId});                
+                } else {
+                    await dropUserData(chatId);
                 }
                 await bot.sendSticker(chatId, 'https://tlgrm.ru/_/stickers/ea5/382/ea53826d-c192-376a-b766-e5abc535f1c9/7.webp');
                 await bot.sendMessage(chatId, `Вітаємо! Ви у телеграм боті Іванни Дубаньовської, здорова спина й правильна осанка`);
@@ -164,9 +185,9 @@ const start = async () => {
             }
             if (text === '/info') {
                 const user = await findUser(chatId);
-                if (user === null)
+                if (user === null ||  user.LastQuestionId === null)
                     return bot.sendMessage(chatId, 'Вибачте. Ви поки-що ще не проходили оитування і мені нічого показати.');
-                const ID = user.LastQuestionId;
+
                 return showLastQuestion(chatId);
             }
             return bot.sendMessage(chatId, 'Нажаль,я Вас не розумію.Спробуйте еще раз!)');
