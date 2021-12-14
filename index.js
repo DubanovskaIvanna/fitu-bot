@@ -87,8 +87,8 @@ const MakeSASURL = (ImageUrl) => {
 
 const showQuestion = async (chatId, ParentID) => {
     const question = await QuestionModel.findOne({where: {ParentID: ParentID}})
-    if (question == null) {       
-        return bot.sendMessage(chatId, 'Іванка, тут варіанти закінчились. Добав що-небудь в Ексельку!)');
+    if (question == null) {
+        return showLastQuestion(chatId);
     }
 
     const questions = await QuestionModel.findAll({
@@ -180,7 +180,13 @@ const start = async () => {
                 const user = await findUser(chatId);
                 if (user === null)
                     return bot.sendMessage(chatId, 'Вибачте. Ви поки-що ще не проходили оитування і мені нічого показати.');
-                const ID = user.LastQuestionId;
+                
+                const Identity  = user.LastQuestionId;
+                if (Identity === null) {
+                    return showQuestion(chatId, null);
+                }
+                const question = await QuestionModel.findOne({where: {Identity}})
+                const ID = question.ID;
                 return showQuestion(chatId, ID);
             }
             if (text === '/info') {
@@ -198,11 +204,15 @@ const start = async () => {
     })
 
     bot.on('callback_query', async msg => {
-        const Identity = parseInt(msg.data);
-        const chatId = msg.message.chat.id;
-        
-        const ID = await updateUserData(chatId, Identity);
-        return showQuestion(chatId, ID);
+        try {
+            const Identity = parseInt(msg.data);
+            const chatId = msg.message.chat.id;
+            
+            const ID = await updateUserData(chatId, Identity);
+            return showQuestion(chatId, ID);
+        } catch (e) {
+            return bot.sendMessage(chatId, 'Відбулась невідома помилка!)');
+        }
     })
 }
 
